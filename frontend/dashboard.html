@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Espace Karta</title>
+    <link rel="icon" href="/images/karta_blue_nobg.png" type="image/png"> <!-- Favicon -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> <!-- Ajout des icônes Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"> <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="/images/karta_black_nobg.png" width="35" height="35" class="d-inline-block align-top mr-2" alt="Karta Logo">
+            Karta - Mon Espace
+        </a>
+        <button id="logoutButton" class="btn btn-outline-danger ml-auto">
+            <i class="bi bi-box-arrow-right"></i>
+            <span class="d-none d-md-inline ml-1">Déconnexion</span> <!-- Texte visible à partir de md -->
+        </button>
+    </nav>
+
+    <div class="container mt-5">
+        <h2>Mes Cartes de Fidélité</h2>
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addCardModal">Ajouter une carte</button>
+
+        <div id="loyaltyCardsList" class="row">
+            <!-- Exemple de structure de carte (sera générée par JS) :
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center">
+                <div class="loyalty-card-container">
+                    <div class="loyalty-card default-bg" data-merchant-id="1">
+                        <span class="offer-indicator"></span> <!-- Indicateur d'offre -->
+                        <div class="loyalty-card__header">
+            <!-- Les cartes seront injectées ici par JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal pour la carte détaillée -->
+    <div id="detailedCardModal" class="detailed-card-modal">
+        <div class="detailed-card-modal-content">
+            <span class="detailed-card-modal-close">&times;</span>
+            <img src="" alt="Logo Commerçant" id="detailedCardLogo" class="detailed-card-logo-modal">
+            <h3 id="detailedCardMerchantName">Nom du Commerçant</h3>
+            <div id="detailedCardQrCode" class="detailed-card-qrcode-container">
+                <!-- QR Code sera injecté ici -->
+            </div>
+            <p id="detailedCardIdentifierText" class="detailed-card-identifier-text"></p>
+
+            <!-- Section pour l'offre -->
+            <div id="detailedCardOfferSection" class="detailed-card-offer-section" style="display: none;">
+                <h4>Votre offre :</h4>
+                <p id="detailedCardOfferDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour ajouter une carte -->
+    <div class="modal fade" id="addCardModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ajouter une nouvelle carte</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCardForm">
+                        <div class="form-group">
+                            <label for="merchantSearch">Rechercher un commerçant par nom :</label>
+                            <input type="text" class="form-control" id="merchantSearch" placeholder="Nom du commerçant">
+                            <div id="merchantSearchResults" class="mt-2">
+                                <!-- Les résultats de la recherche de commerçants apparaîtront ici -->
+                            </div>
+                        </div>
+                        <p class="text-center">OU</p>
+                        <div class="form-group">
+                            <label for="merchantCodeScan">Scanner le code d'inscription du commerçant :</label>
+                            <!-- Placeholder pour un futur scanner via caméra -->
+                            <button type="button" class="btn btn-secondary btn-block">Scanner un code (à implémenter)</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" id="submitAddCard">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/lib/qrcode.min.js"></script> <!-- Bibliothèque QR Code -->
+    <script src="js/lib/JsBarcode.all.min.js"></script> <!-- Bibliothèque Barcode -->
+    <!-- Correction du commentaire ci-dessous et ajout de la vraie bibliothèque html5-qrcode si elle est utilisée ici aussi -->
+    <script src="js/lib/html5-qrcode.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script> <!-- SweetAlert2 JS -->
+</body>
+</html>

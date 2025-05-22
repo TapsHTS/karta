@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karta - Vos cartes de fidélité</title>
+    <link rel="icon" href="/images/karta_blue_nobg.png" type="image/png"> <!-- Favicon -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"> <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="/images/karta_black_nobg.png" width="35" height="35" class="d-inline-block align-top mr-2" alt="Karta Logo">
+            Karta
+        </a>
+        <!-- Placer le lien directement dans la navbar, après la marque -->
+        <a class="nav-link ml-auto" href="merchant_login.html">
+            <span class="d-md-none">Pro</span> <!-- Visible sur sm et xs -->
+            <span class="d-none d-md-inline">Espace Commerçant</span> <!-- Visible à partir de md -->
+        </a>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2>Connexion Utilisateur</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Se connecter</button>
+                    <p class="mt-3">Pas encore de compte ? <a href="#register">S'inscrire</a></p>
+                </form>
+
+                <!-- Formulaire d'inscription (peut être caché/affiché) -->
+                <form id="registerForm" style="display:none;" class="mt-4">
+                    <h2>Inscription Utilisateur</h2>
+                    <div class="form-group">
+                        <label for="regName">Nom</label>
+                        <input type="text" class="form-control" id="regName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email</label>
+                        <input type="email" class="form-control" id="regEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Mot de passe</label>
+                        <input type="password" class="form-control" id="regPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">S'inscrire</button>
+                    <p class="mt-3">Déjà un compte ? <a href="#login">Se connecter</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script> <!-- SweetAlert2 JS -->
+</body>
+</html>

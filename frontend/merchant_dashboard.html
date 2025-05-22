@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karta - Tableau de Bord Commerçant</title>
+    <link rel="icon" href="/images/karta_blue_nobg.png" type="image/png"> <!-- Favicon -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Ajout des icônes Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"> <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading">
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="/images/karta_blue_nobg.png" width="30" height="30" class="d-inline-block align-top mr-2 sidebar-logo-img" alt="Karta Logo"> <!-- Taille ajustée pour la sidebar -->
+                    <span class="sidebar-logo-text">Karta Pro</span>
+                </a>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#scan" class="list-group-item list-group-item-action bg-light sidebar-link" data-section="scan-section">
+                    <i class="bi bi-qr-code-scan"></i><span class="sidebar-text">Scanner Client</span>
+                </a>
+                <a href="#stats" class="list-group-item list-group-item-action bg-light sidebar-link" data-section="stats-section">
+                    <i class="bi bi-bar-chart-line-fill"></i><span class="sidebar-text">Statistiques</span>
+                </a>
+                <a href="#config" class="list-group-item list-group-item-action bg-light sidebar-link" data-section="config-section">
+                    <i class="bi bi-gear-fill"></i><span class="sidebar-text">Configuration</span>
+                </a>
+                <a href="#offers" class="list-group-item list-group-item-action bg-light sidebar-link" data-section="offers-section">
+                    <i class="bi bi-gift-fill"></i><span class="sidebar-text">Gestion des Offres</span>
+                </a>
+                <a href="#clients" class="list-group-item list-group-item-action bg-light sidebar-link" data-section="clients-section">
+                    <i class="bi bi-people-fill"></i><span class="sidebar-text">Clients</span>
+                </a>
+            </div>
+            <div class="sidebar-logout">
+                <button id="merchantLogoutButton" class="btn btn-link text-danger d-flex align-items-center">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span class="sidebar-text ml-2 d-none d-md-inline">Déconnexion</span> 
+                    <!-- Le texte "Déconnexion" sera caché par CSS si la sidebar est rétractée -->
+                    <!-- Sur mobile, si la sidebar est déployée, seul l'icône sera visible grâce à d-md-inline sur le span -->
+                </button>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <button class="btn btn-primary" id="menu-toggle"><i class="bi bi-list"></i></button>
+                <!-- Remplacer le texte par le logo si la sidebar est toggled et que le nom du commerce est long ?
+                     Pour l'instant, on garde le nom du commerce. -->
+                <h2 id="merchantNameDisplay" class="ml-3 mb-0">Nom du Commerce</h2>
+            </nav>
+
+            <div class="container-fluid p-4">
+                <!-- Le contenu sera affiché ici en fonction du lien cliqué -->
+                <div id="scan-section" class="content-section">
+                    <!-- Section Opérations (Scanner Carte Client) -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Scanner Carte Client / Ajouter Points</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="clientCardIdentifier">Identifiant Carte Client (ou scan)</label>
+                                <input type="text" class="form-control" id="clientCardIdentifier" placeholder="Entrer ou scanner le code client">
+                                <button class="btn btn-info btn-sm mt-2" id="initiateScanButton">
+                                    <i class="bi bi-camera-fill"></i> Scanner via caméra
+                                </button>
+                                <!-- Conteneur pour le lecteur QR Code -->
+                                <div id="qr-reader" class="mt-3" style="width: 100%; max-width: 400px; margin:auto; display:none;"></div>
+                                <div id="qr-reader-results" class="mt-2 text-center"></div>
+                            </div>
+
+                            <div class="form-group d-flex align-items-center">
+                                <label class="switch mb-0">
+                                    <input type="checkbox" id="autoValidateScan">
+                                    <span class="slider round"></span>
+                                </label>
+                                <span class="ml-2" for="autoValidateScan">Valider automatiquement après scan</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pointsToAdd">Points à ajouter</label>
+                                <input type="number" class="form-control" id="pointsToAdd" value="0" min="0">
+                            </div>
+                            <!-- disable tampon stamps -->
+                             <!-- <div class="form-group">
+                                <label for="stampsToAdd">Tampons à ajouter</label>
+                                <input type="number" class="form-control" id="stampsToAdd" value="0" min="0">
+                            </div> -->
+                            <button id="addPointsButton" class="btn btn-success">Valider et Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="stats-section" class="content-section" style="display: none;">
+                     <!-- Section Statistiques -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Statistiques (Simplifiées)</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>Clients actifs : <span id="activeClientsCount">N/A</span></p>
+                            <p>Total visites (transactions) : <span id="totalVisitsCount">N/A</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="config-section" class="content-section" style="display: none;">
+                    <!-- Section Configuration -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Configuration du Commerce</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="merchantProfileForm">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="merchantProfileName">Nom du commerce</label>
+                                        <input type="text" class="form-control" id="merchantProfileName">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="merchantLogo">Logo (URL)</label>
+                                        <input type="url" class="form-control" id="merchantLogo" placeholder="https://example.com/logo.png">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="loyaltyType">Type de programme de fidélité</label>
+                                        <select class="form-control" id="loyaltyType">
+                                            <option value="points">Points</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="defaultPointsPerScan">Points par scan par défaut</label>
+                                        <input type="number" class="form-control" id="defaultPointsPerScan" value="1" min="0">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Mettre à jour Configuration</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nouvelle Section Gestion des Offres -->
+                <div id="offers-section" class="content-section" style="display: none;">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Gestion des Offres de Fidélité</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <strong>État actuel du système d'offres : </strong>
+                                <span id="offerSystemStatus" class="badge badge-secondary">Indéterminé</span>
+                            </div>
+                            <form id="merchantOfferForm">
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="offerIsActive">
+                                        <label class="custom-control-label" for="offerIsActive">Activer le système d'offres</label>
+                                    </div>
+                                </div>
+                                <div id="offerConfigurationDetails" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="offerTriggerPoints">Points pour débloquer l'offre</label>
+                                        <input type="number" class="form-control" id="offerTriggerPoints" placeholder="Ex: 100" min="1">
+                                        <small class="form-text text-muted">L'offre sera débloquée à chaque multiple de ce nombre de points (ex: 100, 200, 300...).</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="offerDescription">Description de l'offre</label>
+                                        <input type="text" class="form-control" id="offerDescription" placeholder="Ex: 1 Café gratuit">
+                                        <small class="form-text text-muted">Ce que le client verra comme récompense.</small>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Mettre à jour Configuration des Offres</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin Nouvelle Section Gestion des Offres -->
+
+                <!-- Nouvelle Section Clients -->
+                <div id="clients-section" class="content-section" style="display: none;">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Gestion des Clients</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Rechercher un Client</h5>
+                                    <div class="form-group">
+                                        <label for="clientSearchInput">Rechercher par Nom, Email ou Identifiant Carte</label>
+                                        <input type="text" class="form-control" id="clientSearchInput" placeholder="Entrez un terme de recherche...">
+                                        <!-- Option pour scanner (peut réutiliser le scanner existant ou un dédié) -->
+                                        <button class="btn btn-outline-secondary btn-sm mt-2" id="scanClientCardForSearchButton">
+                                            <i class="bi bi-qr-code-scan"></i> Scanner carte client
+                                        </button>
+                                    </div>
+                                    <div id="clientSearchResults" class="list-group mt-2" style="max-height: 300px; overflow-y: auto;">
+                                        <!-- Les résultats de la recherche apparaîtront ici -->
+                                        <!-- Exemple d'élément: <a href="#" class="list-group-item list-group-item-action" data-card-id="...">Nom Client - email@example.com - ID: XXXX</a> -->
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Détails du Client Sélectionné</h5>
+                                    <div id="selectedClientDetails" style="display: none;">
+                                        <p><strong>Nom :</strong> <span id="clientDetailName"></span></p>
+                                        <p><strong>Email :</strong> <span id="clientDetailEmail"></span></p>
+                                        <p><strong>Identifiant Carte :</strong> <span id="clientDetailCardIdentifier"></span></p>
+                                        <div class="form-group">
+                                            <label for="clientDetailPoints">Points Actuels :</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="clientDetailPoints" min="0">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-success btn-sm" id="updateClientPointsButton" type="button">Mettre à jour</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p><strong>QR Code de la Carte :</strong></p>
+                                        <div id="clientDetailQrCode" style="width: 150px; height: 150px; margin: auto; border: 1px solid #ccc; padding: 5px;">
+                                            <!-- QR Code sera injecté ici -->
+                                        </div>
+                                        <h6 class="mt-3">Offres Disponibles :</h6>
+                                        <ul id="clientDetailOffersList" class="list-unstyled">
+                                            <!-- Les offres seront listées ici -->
+                                            <!-- Exemple: <li>Description de l'offre <button class="btn btn-danger btn-sm">Retirer</button></li> -->
+                                        </ul>
+                                        <div id="noClientOffers" class="text-muted" style="display: none;">Aucune offre disponible pour ce client.</div>
+                                    </div>
+                                    <div id="noClientSelected" class="text-center text-muted mt-4">
+                                        <p>Veuillez rechercher et sélectionner un client pour voir ses détails.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin Nouvelle Section Clients -->
+
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/lib/html5-qrcode.min.js"></script> <!-- Bibliothèque de scan QR Code -->
+    <script src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script> <!-- SweetAlert2 JS -->
+</body>
+</html>

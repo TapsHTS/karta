@@ -1,0 +1,490 @@
+/* Importation de la police Space Mono - Assurez-vous qu'elle est bien chargée */
+@import url('https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i');
+
+body {
+    font-family: 'Space Mono', monospace, sans-serif; /* Ajout de Space Mono */
+    background-color: #f4f7f6;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Styles pour les cartes de fidélité inspirés du CSS fourni */
+.loyalty-card-container { /* Conteneur pour la perspective si on ajoute le flip */
+  width: 320px; /* Largeur fixe de la carte */
+  height: 190px; /* Hauteur fixe de la carte */
+  margin-bottom: 25px; /* Espace entre les cartes */
+  perspective: 600px;
+}
+
+.loyalty-card {
+  width: 100%;
+  height: 100%;
+  position: relative; /* Important pour le positionnement de l'indicateur d'offre */
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* transition: transform .5s cubic-bezier(0.175, 0.885, 0.32, 1.275); */
+  /* transform-style: preserve-3d; */ /* Pour l'effet de flip */
+}
+
+/* Indicateur d'offre sur la carte */
+.offer-indicator {
+  position: absolute;
+  top: 10px; /* Ajustez selon la position souhaitée */
+  right: 10px; /* Ajustez */
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border-radius: 50%;
+  border: 2px solid white; /* Pour le faire ressortir */
+  z-index: 5; /* Au-dessus du contenu de la carte mais en dessous du logo si conflit */
+  display: none; /* Caché par défaut, affiché par JS */
+}
+.offer-indicator.visible {
+    display: block;
+}
+
+/* Couleurs de fond par défaut (sera surchargé par JS) */
+.loyalty-card.default-bg {
+    background-image: linear-gradient(to right bottom, #fd696b, #fa616e, #f65871, #f15075, #ec4879);
+}
+
+.loyalty-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.loyalty-card__qr-code {
+    /* Styles pour le conteneur du QR code à gauche */
+    width: 70px; /* Ajustez la taille selon vos besoins */
+    height: 70px;
+    background-color: white; /* Fond blanc pour le QR code */
+    padding: 5px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loyalty-card__qr-code img, .loyalty-card__qr-code canvas { /* qrcode.js génère un canvas ou une img */
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.loyalty-card__logo-merchant {
+    /* Styles pour le logo du commerçant en haut à droite */
+    max-width: 80px; /* Ajustez la taille */
+    max-height: 40px; /* Ajustez la taille */
+    object-fit: contain;
+}
+
+.loyalty-card__content {
+    text-align: center;
+}
+
+.loyalty-card__merchant-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.loyalty-card__points {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.loyalty-card__identifier { /* Pour le code-barres ou l'identifiant textuel */
+    font-size: 12px;
+    word-break: break-all;
+    background-color: rgba(0,0,0,0.1);
+    padding: 5px;
+    border-radius: 4px;
+    margin-top: 5px; /* Espace au-dessus du code-barres */
+}
+.loyalty-card__identifier svg { /* Si JsBarcode est utilisé */
+    display: block;
+    margin: auto;
+    max-width: 100%;
+}
+
+/* Ajustements pour Bootstrap grid si on garde .col-md-4 */
+/* Si vous utilisez .loyalty-card-container directement dans .row,
+   vous pourriez avoir besoin d'ajuster le padding/margin de .col-md-4
+   ou de mettre .loyalty-card-container dans un .col-md-X */
+
+/* Sidebar Styles */
+#wrapper {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh; /* Assure que le wrapper prend toute la hauteur */
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    width: 250px; /* Largeur de la sidebar déployée */
+    background-color: #f8f9fa; /* Couleur de fond de la sidebar */
+    transition: margin .25s ease-out, width .25s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem; /* La taille sera pour le texte à côté du logo */
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+}
+
+#sidebar-wrapper .sidebar-heading .navbar-brand {
+    padding: 0; /* Retirer le padding du navbar-brand */
+    font-weight: bold; /* S'assurer que le texte est en gras */
+}
+
+.sidebar-logo-img {
+    transition: opacity 0.1s ease-out;
+}
+.sidebar-logo-text {
+    transition: opacity 0.1s ease-out;
+}
+
+#sidebar-wrapper .list-group-item {
+    border: none;
+    padding: 1rem 1.25rem;
+    display: flex; /* Pour aligner icône et texte */
+    align-items: center; /* Centrer verticalement icône et texte */
+}
+
+#sidebar-wrapper .list-group-item i {
+    margin-right: 0.75rem; /* Espace entre icône et texte */
+    font-size: 1.25rem; /* Taille de l'icône */
+    width: 24px; /* Largeur fixe pour l'icône pour l'alignement quand rétracté */
+    text-align: center;
+    transition: color 0.15s ease-in-out; /* Transition pour la couleur de l'icône */
+}
+
+#sidebar-wrapper .list-group-item.active {
+    background-color: #e9ecef; /* Un fond légèrement différent pour l'élément actif */
+    border-left: 3px solid #007bff; /* Une bordure bleue à gauche */
+    color: #007bff; /* Couleur du texte en bleu */
+    font-weight: bold;
+}
+
+#sidebar-wrapper .list-group-item.active i {
+    color: #007bff; /* Couleur de l'icône en bleu */
+}
+
+#sidebar-wrapper .sidebar-text {
+    transition: opacity 0.1s ease-out;
+}
+
+#page-content-wrapper {
+    flex: 1; /* Prend l'espace restant */
+    min-width: 0; /* Important pour le flexbox wrapping */
+    padding-top: 56px; /* Hauteur de la navbar supérieure */
+    position: relative; /* Pour que la navbar supérieure puisse être positionnée */
+}
+#page-content-wrapper .navbar {
+    position: fixed; /* Fixer la navbar supérieure */
+    top: 0;
+    right: 0;
+    left: 250px; /* Laisser de la place pour la sidebar déployée */
+    z-index: 1030; /* Au-dessus du contenu */
+    transition: left .25s ease-out;
+}
+
+
+.sidebar-logout {
+    margin-top: auto; /* Pousse le bouton de déconnexion en bas */
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #dee2e6;
+}
+.sidebar-logout button {
+    width: 100%;
+    text-align: left;
+    padding-left: 0;
+}
+.sidebar-logout i {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+}
+
+#wrapper.toggled .sidebar-logout i {
+    margin-right: 0;
+}
+#wrapper.toggled .sidebar-logout .sidebar-text {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    display: inline-block;
+    overflow: hidden;
+    margin-left: 0 !important;
+}
+
+
+/* Retracted state */
+#wrapper.toggled #sidebar-wrapper {
+    width: 70px; /* Largeur de la sidebar rétractée */
+}
+
+#wrapper.toggled #sidebar-wrapper .sidebar-text {
+    opacity: 0;
+    visibility: hidden;
+}
+/* Cacher le texte du logo dans la sidebar quand elle est rétractée */
+#wrapper.toggled #sidebar-wrapper .sidebar-logo-text {
+    opacity: 0;
+    visibility: hidden;
+    width: 0; /* Pour éviter tout débordement */
+    display: inline-block; /* Pour que width:0 fonctionne */
+    overflow: hidden;
+}
+/* S'assurer que l'image du logo reste visible et centrée */
+#wrapper.toggled #sidebar-wrapper .sidebar-heading {
+    justify-content: center; /* Centrer l'image du logo */
+}
+#wrapper.toggled #sidebar-wrapper .sidebar-heading .navbar-brand {
+    margin-right: 0 !important; /* Retirer la marge de l'image quand le texte est caché */
+}
+
+#wrapper.toggled #page-content-wrapper .navbar {
+    left: 70px; /* Ajuster la position de la navbar quand la sidebar est rétractée */
+}
+
+
+/* Styles pour la gestion des sections de contenu */
+.content-section {
+    /* display: none; /* Caché par défaut, affiché par JS */
+    padding-top: 15px; /* Espace sous la navbar fixe */
+}
+.content-section.active {
+    display: block;
+}
+
+/* CSS pour le Slider Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px; /* Largeur réduite */
+  height: 24px; /* Hauteur réduite */
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; /* Taille du cercle réduite */
+  width: 18px;  /* Taille du cercle réduite */
+  left: 3px;    /* Positionnement ajusté */
+  bottom: 3px;  /* Positionnement ajusté */
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #007bff; /* Couleur bleue Bootstrap */
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #007bff;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px); /* Mouvement ajusté */
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 24px; /* Ajusté à la hauteur */
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Styles pour le modal de la carte détaillée */
+.detailed-card-modal {
+  display: none; /* Caché par défaut */
+  position: fixed; /* Reste en place lors du défilement */
+  z-index: 1050; /* Au-dessus de tout (Bootstrap modal z-index est 1050) */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Permet le défilement si le contenu est trop grand */
+  background-color: rgba(0,0,0,0.6); /* Fond semi-transparent */
+  padding-top: 60px; /* Espace pour le contenu */
+}
+
+.detailed-card-modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 5% du haut et centré horizontalement */
+  padding: 25px;
+  border: 1px solid #888;
+  width: 85%; /* Largeur du modal */
+  max-width: 400px; /* Largeur maximale */
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  animation-name: animatetop;
+  animation-duration: 0.4s
+}
+
+/* Animation d'apparition */
+@keyframes animatetop {
+  from {top: -300px; opacity: 0}
+  to {top: 0; opacity: 1}
+}
+
+.detailed-card-modal-close {
+  color: #aaa;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.detailed-card-modal-close:hover,
+.detailed-card-modal-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.detailed-card-logo-modal {
+  max-width: 100px;
+  max-height: 50px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+#detailedCardMerchantName {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.detailed-card-qrcode-container {
+  width: 180px; /* Taille du conteneur QR code */
+  height: 180px;
+  margin: 0 auto 15px auto; /* Centré */
+  background-color: white;
+  padding: 10px; /* Espace autour du QR code */
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+.detailed-card-qrcode-container img, .detailed-card-qrcode-container canvas {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.detailed-card-identifier-text {
+    font-size: 0.9rem;
+    color: #555;
+    word-break: break-all;
+    margin-bottom: 20px; /* Espace avant la section offre */
+}
+
+/* Section de l'offre dans le modal */
+.detailed-card-offer-section {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #e9f5ff; /* Un fond légèrement différent */
+    border-radius: 5px;
+    border: 1px dashed #007bff;
+}
+.detailed-card-offer-section h4 {
+    font-size: 1.1rem;
+    color: #0056b3;
+    margin-bottom: 8px;
+}
+.detailed-card-offer-section p {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0;
+}
+
+/* Ajustement pour le conteneur principal si nécessaire */
+/* Si le modal prend tout l'écran, .container.mt-5 n'a pas besoin d'être ajusté.
+   Si vous voulez que le fond soit moins visible, vous pouvez ajouter :
+.container.blur-when-modal-active {
+    filter: blur(5px);
+}
+*/
+
+/* Pour les petits écrans, la sidebar pourrait être cachée par défaut ou se comporter différemment */
+@media (max-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: -250px; /* Cacher la sidebar par défaut sur mobile */
+        width: 250px; /* Garder la largeur pour quand elle s'affiche */
+    }
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: 0;
+        width: 250px; /* Sidebar déployée prend sa largeur normale */
+    }
+    #wrapper.toggled #sidebar-wrapper .sidebar-text {
+        opacity: 1; /* Le texte est visible quand déployé sur mobile */
+        visibility: visible;
+    }
+    /* S'assurer que le texte du logo est visible quand la sidebar est déployée sur mobile */
+    #wrapper.toggled #sidebar-wrapper .sidebar-logo-text {
+        opacity: 1;
+        visibility: visible;
+        width: auto;
+        display: inline-block;
+    }
+    #wrapper.toggled #sidebar-wrapper .sidebar-heading {
+        justify-content: flex-start; /* Aligner à gauche normalement */
+    }
+
+    #page-content-wrapper .navbar {
+        left: 0; /* Navbar prend toute la largeur quand sidebar est cachée */
+    }
+    #wrapper.toggled #page-content-wrapper .navbar {
+        left: 0; /* La navbar ne bouge pas, c'est la sidebar qui vient par dessus ou pousse */
+    }
+    /* Optionnel: pousser le contenu quand la sidebar est visible sur mobile */
+    /* #wrapper.toggled #page-content-wrapper {
+        margin-left: 250px;
+    } */
+}
