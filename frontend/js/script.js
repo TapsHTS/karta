@@ -701,6 +701,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         async function handleUpdateClientPoints() {
+            // S'assurer que les éléments DOM sont accessibles
+            if (!clientDetailPointsInputEl) {
+                console.error("Élément DOM pour les points client manquant dans handleUpdateClientPoints");
+                return;
+            }
+            if (!selectedLoyaltyCardId) {
+                showToast('warning', "Aucun client sélectionné.");
+                return;
+            }
+
+            const newPoints = parseInt(clientDetailPointsInputEl.value, 10);
+            if (isNaN(newPoints)) {
+                showToast('warning', "Veuillez entrer un nombre valide de points.");
+                return;
+            }
+
+            try {
+                const token = getToken();
+                const body = { points: newPoints };
+                await apiCall(`/merchants/clients/${selectedLoyaltyCardId}/points`, 'PUT', body, token);
+                showToast('success', "Points client mis à jour avec succès !");
+                loadMerchantDashboardData();
+            } catch (error) {
+                showToast('error', "Erreur lors de la mise à jour des points client.");
+                console.error("Erreur lors de la mise à jour des points client:", error);
+            }
+        }
+
         // Initialisation et écouteurs d'événements pour merchant_dashboard.html
         const currentToken = getToken();
         const currentUserType = getUserType();
